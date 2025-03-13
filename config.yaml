@@ -1,5 +1,4 @@
 bot:
   token: ""
-  allowed_users: []  # Replace with your Telegram user ID to restrict access
-commands:
-  killall: "firefox"
+  allowed_user_ID: "ABC" # Replace with your Telegram user ID to restrict access
+  user_username: "ABC"  # Replace with your server username to restrict access
