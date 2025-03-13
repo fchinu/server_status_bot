@@ -89,6 +89,7 @@ async def topram(update: Update, _: CallbackContext):
 
     await update.message.reply_text(top_memory_message, parse_mode="Markdown")
 
+
 @restricted
 async def killall(update: Update, context: CallbackContext):
     """Kill processes by name for the configured user."""
@@ -100,8 +101,9 @@ async def killall(update: Update, context: CallbackContext):
     result = kill_processes_by_name(process_name, USERNAME)
     await update.message.reply_text(result)
 
+
 @restricted
-async def killuser(update: Update, context: CallbackContext):
+async def killuser(update: Update, _: CallbackContext):
     """Kill all processes for the configured user."""
     result = kill_processes_by_user(USERNAME)
     await update.message.reply_text(result)
