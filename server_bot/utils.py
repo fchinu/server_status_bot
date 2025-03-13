@@ -126,13 +126,18 @@ def get_user_resource_usage():
 
 
 def kill_processes_by_name(process_name, username):
-    """Kill all processes with the given name owned by the specified user, excluding the bot's PID."""
+    """Kill all processes with the given name, excluding the bot's PID."""
     try:
         # Get the bot's PID
         bot_pid = os.getpid()
 
         # Find all PIDs for the given process name and user
-        result = subprocess.run(["pgrep", "-u", username, process_name], capture_output=True, text=True)
+        result = subprocess.run(
+            ["pgrep", "-u", username, process_name],
+            capture_output=True,
+            text=True,
+            check=False
+        )
         if result.returncode != 0:
             return f"No processes found with name '{process_name}'."
 
@@ -145,20 +150,24 @@ def kill_processes_by_name(process_name, username):
 
         # Kill the remaining PIDs
         for pid in pids:
-            subprocess.run(["kill", "-9", pid], capture_output=True, text=True)
+            subprocess.run(["kill", "-9", pid], capture_output=True, text=True, check=False)
 
         return f"Killed {len(pids)} processes with name '{process_name}'."
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-except
         return f"Error: {e}"
 
 
 def kill_processes_by_user(username):
     """Kill all processes owned by the given user."""
     try:
-        result = subprocess.run(["pkill", "-9", "-u", username], capture_output=True, text=True)
+        result = subprocess.run(
+            ["pkill", "-9", "-u", username],
+            capture_output=True,
+            text=True,
+            check=False
+        )
         if result.returncode == 0:
             return f"Killed all processes for user '{username}'."
-        else:
-            return f"No processes found for user '{username}'."
-    except Exception as e:
+        return f"No processes found for user '{username}'."
+    except Exception as e:  # pylint: disable=broad-except
         return f"Error: {e}"
