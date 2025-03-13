@@ -1,6 +1,7 @@
 """Provide utility functions for monitoring system resources and running shell commands."""
 
 from collections import defaultdict
+import os
 import subprocess
 import time
 import psutil
@@ -122,3 +123,42 @@ def get_user_resource_usage():
             for user, data in user_stats.items()
         ]
     ) or "No active processes found."
+
+
+def kill_processes_by_name(process_name, username):
+    """Kill all processes with the given name owned by the specified user, excluding the bot's PID."""
+    try:
+        # Get the bot's PID
+        bot_pid = os.getpid()
+
+        # Find all PIDs for the given process name and user
+        result = subprocess.run(["pgrep", "-u", username, process_name], capture_output=True, text=True)
+        if result.returncode != 0:
+            return f"No processes found with name '{process_name}'."
+
+        # Extract PIDs from the pgrep output
+        pids = result.stdout.strip().split()
+        pids = [pid for pid in pids if pid != str(bot_pid)]  # Exclude the bot's PID
+
+        if not pids:
+            return f"No processes found with name '{process_name}'."
+
+        # Kill the remaining PIDs
+        for pid in pids:
+            subprocess.run(["kill", "-9", pid], capture_output=True, text=True)
+
+        return f"Killed {len(pids)} processes with name '{process_name}'."
+    except Exception as e:
+        return f"Error: {e}"
+
+
+def kill_processes_by_user(username):
+    """Kill all processes owned by the given user."""
+    try:
+        result = subprocess.run(["pkill", "-9", "-u", username], capture_output=True, text=True)
+        if result.returncode == 0:
+            return f"Killed all processes for user '{username}'."
+        else:
+            return f"No processes found for user '{username}'."
+    except Exception as e:
+        return f"Error: {e}"

@@ -8,20 +8,22 @@ from server_bot.utils import (
     get_total_ram_usage,
     get_top_processes,
     get_user_resource_usage,
-    run_command
+    kill_processes_by_name,
+    kill_processes_by_user
 )
 
 # Load config
 with open("config.yaml", "r", encoding="utf-8") as file:
     CONFIG = yaml.safe_load(file)
 
-ALLOWED_USERS = CONFIG["bot"]["allowed_users"]
+ALLOWED_USER = CONFIG["bot"]["allowed_user_ID"]
+USERNAME = CONFIG["bot"]["user_username"]
 
 
 def check_permission(update: Update):
     """Check if the user is allowed to use the bot."""
     user_id = update.message.from_user.id
-    return user_id in ALLOWED_USERS
+    return user_id == ALLOWED_USER
 
 
 def restricted(func):
@@ -87,10 +89,19 @@ async def topram(update: Update, _: CallbackContext):
 
     await update.message.reply_text(top_memory_message, parse_mode="Markdown")
 
+@restricted
+async def killall(update: Update, context: CallbackContext):
+    """Kill processes by name for the configured user."""
+    if not context.args:
+        await update.message.reply_text("Usage: /killall <process_name>")
+        return
+
+    process_name = context.args[0]
+    result = kill_processes_by_name(process_name, USERNAME)
+    await update.message.reply_text(result)
 
 @restricted
-async def killall(update: Update, _: CallbackContext):
-    """Kill a process (defined in config)."""
-    process = CONFIG["commands"]["killall"]
-    output = run_command(f"killall -9 {process}")
-    await update.message.reply_text(f"Killed {process}:\n{output}")
+async def killuser(update: Update, context: CallbackContext):
+    """Kill all processes for the configured user."""
+    result = kill_processes_by_user(USERNAME)
+    await update.message.reply_text(result)
