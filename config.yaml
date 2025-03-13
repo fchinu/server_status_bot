@@ -1,0 +1,5 @@
+bot:
+  token: ""
+  allowed_users: []  # Replace with your Telegram user ID to restrict access
+commands:
+  killall: "firefox"
