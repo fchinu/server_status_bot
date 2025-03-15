@@ -71,6 +71,8 @@ async def help_command(update: Update, _: CallbackContext):
         "\n"
         r"\- /killuser: Kill all processes for the configured user\."
         "\n\n"
+        r"\- /sensors: Display sensor data \(temperatures, fan speeds\)\."
+        "\n\n"
         r"For more information, visit the "
         r"[GitHub repository](https://github\.com/fchinu/server\_status\_bot)\."
     )
@@ -102,6 +104,7 @@ async def commands(update: Update, _: CallbackContext):
         "\n"
         r"\- /killuser: Kill all processes for the configured user\."
         "\n\n"
+        r"\- /sensors: Display sensor data \(temperatures, fan speeds\)\."
     )
     await update.message.reply_text(commands_text, parse_mode="MarkdownV2")
 
@@ -143,7 +146,8 @@ async def topcpu(update: Update, _: CallbackContext):
     top_cpu_escaped = escape_markdown_v2(top_cpu)
 
     top_cpu_message = (
-        r"🚀 *Top CPU\-consuming Processes:*\n"
+        r"🚀 *Top CPU\-consuming Processes:*"
+        "\n"
         f"```\n{top_cpu_escaped}\n```"
     )
 
@@ -159,7 +163,8 @@ async def topram(update: Update, _: CallbackContext):
     top_memory_escaped = escape_markdown_v2(top_memory)
 
     top_memory_message = (
-        r"🧠 *Top RAM\-consuming Processes:*\n"
+        r"🧠 *Top RAM\-consuming Processes:*"
+        "\n"
         f"```\n{top_memory_escaped}\n```"
     )
 

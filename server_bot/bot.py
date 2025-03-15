@@ -35,6 +35,7 @@ def main():
         - /topram: Displays the top RAM-consuming processes.
         - /killall: Kills all specified processes.
         - /killuser: Kills all processes for a given user.
+        - /sensors: Displays sensor data.
     3. Runs the bot in polling mode to listen for incoming updates and commands.
     """
 
