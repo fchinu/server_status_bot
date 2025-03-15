@@ -195,7 +195,6 @@ def get_sensors_data():
         result = subprocess.run(["sensors"], capture_output=True, text=True, check=False)
         if result.returncode == 0:
             return result.stdout.strip()
-        else:
-            return "Error: Unable to retrieve sensor data. Ensure 'lm-sensors' is installed."
+        return "Error: Unable to retrieve sensor data. Ensure 'lm-sensors' is installed."
     except Exception as e:  # pylint: disable=broad-except
         return f"Error: {e}"

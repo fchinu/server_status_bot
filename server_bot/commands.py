@@ -170,8 +170,12 @@ async def killuser(update: Update, _: CallbackContext):
     result = kill_processes_by_user(USERNAME)
     await update.message.reply_text(result)
 
+
 @restricted
-async def sensors(update: Update, context: CallbackContext):
+async def sensors(update: Update, _: CallbackContext):
     """Send sensor data (e.g., temperatures, fan speeds)."""
     sensors_data = get_sensors_data()
-    await update.message.reply_text(f"📊 *Sensor Data:*\n```\n{sensors_data}\n```", parse_mode="Markdown")
+    await update.message.reply_text(
+        f"📊 *Sensor Data:*\n```\n{sensors_data}\n```",
+        parse_mode="Markdown"
+    )
