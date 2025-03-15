@@ -1,6 +1,6 @@
 """Command handlers for the Telegram bot."""
 from functools import wraps
-from telegram import Update
+from telegram import Update, LinkPreviewOptions
 from telegram.ext import CallbackContext
 import yaml
 from server_bot.utils import (
@@ -44,6 +44,47 @@ async def start(update: Update, _: CallbackContext):
 
 
 @restricted
+async def help_command(update: Update, _: CallbackContext):
+    """Send a help message with an overview of the bot's functionality."""
+    help_text = (
+        r"🤖 *Ali50 Monitoring Bot*", "\n\n",
+        r"This bot allows you to monitor your server and manage processes\.", "\n\n",
+        r"Here are the available commands:", "\n",
+        r"\- /start: Start the bot and see the welcome message\.", "\n",
+        r"\- /help: Show this help message\.", "\n",
+        r"\- /commands: List all available commands\.", "\n",
+        r"\- /status: Get detailed system status \(CPU, RAM, processes\)\.", "\n",
+        r"\- /topcpu: Show the top CPU\-consuming processes\.", "\n",
+        r"\- /topram: Show the top RAM\-consuming processes\.", "\n",
+        r"\- /killall \<process\_name\>: Kill all processes with the given name\.", "\n",
+        r"\- /killuser: Kill all processes for the configured user\.", "\n\n",
+        r"For more information, visit the ",
+        r"[GitHub repository](https://github\.com/fchinu/server\_status\_bot)\."
+    )
+    await update.message.reply_text(
+        help_text, parse_mode="MarkdownV2",
+        link_preview_options=LinkPreviewOptions(is_disabled=True)
+    )
+
+
+@restricted
+async def commands(update: Update, _: CallbackContext):
+    """List all available commands with brief descriptions."""
+    commands_text = (
+        r"📜 *Available Commands*", "\n\n",
+        r"\- /start: Start the bot and see the welcome message\.", "\n",
+        r"\- /help: Show the help message\.", "\n",
+        r"\- /commands: List all available commands\.", "\n",
+        r"\- /status: Get detailed system status \(CPU, RAM, processes\)\.", "\n",
+        r"\- /topcpu: Show the top CPU\-consuming processes\.", "\n",
+        r"\- /topram: Show the top RAM\-consuming processes\.", "\n",
+        r"\- /killall \<process\_name\>: Kill all processes with the given name\.", "\n",
+        r"\- /killuser: Kill all processes for the configured user\.", "\n\n"
+    )
+    await update.message.reply_text(commands_text, parse_mode="MarkdownV2")
+
+
+@restricted
 async def status(update: Update, _: CallbackContext):
     """Get detailed system status."""
 
@@ -54,12 +95,12 @@ async def status(update: Update, _: CallbackContext):
     # Send a message with total system information
     status_message = (
         f"📊 *System Status (Updated):*\n"
-        f"🔥 *Total CPU Usage:* {total_cpu:.2f}%\n\n"
-        f"🧠 *RAM Usage:* {ram_usage:.2f}%\n\n"
+        f"🔥 *Total CPU Usage:* {total_cpu:.2f}%\n"
+        f"🧠 *Total RAM Usage:* {ram_usage:.2f}%\n\n"
         f"👥 *CPU/RAM Usage per User:*\n```\n{user_usage}\n```\n"
     )
 
-    await update.message.reply_text(status_message, parse_mode="Markdown")
+    await update.message.reply_text(status_message, parse_mode="MarkdownV2")
 
 
 @restricted
@@ -73,7 +114,7 @@ async def topcpu(update: Update, _: CallbackContext):
         f"```\n{top_cpu}\n```"
     )
 
-    await update.message.reply_text(top_cpu_message, parse_mode="Markdown")
+    await update.message.reply_text(top_cpu_message, parse_mode="MarkdownV2")
 
 
 @restricted
@@ -87,7 +128,7 @@ async def topram(update: Update, _: CallbackContext):
         f"```\n{top_memory}\n```"
     )
 
-    await update.message.reply_text(top_memory_message, parse_mode="Markdown")
+    await update.message.reply_text(top_memory_message, parse_mode="MarkdownV2")
 
 
 @restricted

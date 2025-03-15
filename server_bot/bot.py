@@ -1,7 +1,16 @@
 """ Main bot application to run the bot. """
 from telegram.ext import Application, CommandHandler
 import yaml
-from server_bot.commands import start, status, killall, killuser, topcpu, topram
+from server_bot.commands import (
+    start,
+    status,
+    killall,
+    killuser,
+    topcpu,
+    topram,
+    help_command,
+    commands
+)
 
 # Load config
 with open("config.yaml", "r", encoding="utf-8") as file:
@@ -17,12 +26,14 @@ def main():
     This function performs the following tasks:
     1. Builds the application with the provided bot token.
     2. Registers command handlers for various bot commands:
-       - /start: Starts the bot.
-       - /status: Checks the status.
-       - /topcpu: Displays the top CPU-consuming processes.
-       - /topram: Displays the top RAM-consuming processes.
-       - /killall: Kills all specified processes.
-       - /killuser: Kills all processes for a given user.
+        - /start: Starts the bot.
+        - /help: Displays the help message.
+        - /commands: Displays the available commands.
+        - /status: Checks the status.
+        - /topcpu: Displays the top CPU-consuming processes.
+        - /topram: Displays the top RAM-consuming processes.
+        - /killall: Kills all specified processes.
+        - /killuser: Kills all processes for a given user.
     3. Runs the bot in polling mode to listen for incoming updates and commands.
     """
 
@@ -30,6 +41,8 @@ def main():
 
     # Register commands
     app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("commands", commands))
     app.add_handler(CommandHandler("status", status))
     app.add_handler(CommandHandler("topcpu", topcpu))
     app.add_handler(CommandHandler("topram", topram))
