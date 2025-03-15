@@ -1,7 +1,7 @@
 """ Main bot application to run the bot. """
 from telegram.ext import Application, CommandHandler
 import yaml
-from server_bot.commands import start, status, killall, topcpu, topram
+from server_bot.commands import start, status, killall, killuser, topcpu, topram
 
 # Load config
 with open("config.yaml", "r", encoding="utf-8") as file:
@@ -22,6 +22,7 @@ def main():
        - /topcpu: Displays the top CPU-consuming processes.
        - /topram: Displays the top RAM-consuming processes.
        - /killall: Kills all specified processes.
+       - /killuser: Kills all processes for a given user.
     3. Runs the bot in polling mode to listen for incoming updates and commands.
     """
 
@@ -33,6 +34,7 @@ def main():
     app.add_handler(CommandHandler("topcpu", topcpu))
     app.add_handler(CommandHandler("topram", topram))
     app.add_handler(CommandHandler("killall", killall))
+    app.add_handler(CommandHandler("killuser", killuser))
 
     app.run_polling()
 

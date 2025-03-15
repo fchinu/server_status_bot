@@ -160,14 +160,30 @@ def kill_processes_by_name(process_name, username):
 def kill_processes_by_user(username):
     """Kill all processes owned by the given user."""
     try:
+        # Get the bot's PID
+        bot_pid = os.getpid()
+
+        # Find all PIDs for the given user
         result = subprocess.run(
-            ["pkill", "-9", "-u", username],
+            ["pgrep", "-u", username],
             capture_output=True,
             text=True,
             check=False
         )
-        if result.returncode == 0:
-            return f"Killed all processes for user '{username}'."
-        return f"No processes found for user '{username}'."
+        if result.returncode != 0:
+            return f"No processes found for user '{username}'."
+
+        # Extract PIDs from the pgrep output
+        pids = result.stdout.strip().split()
+        pids = [pid for pid in pids if pid != str(bot_pid)]  # Exclude the bot's PID
+
+        if not pids:
+            return f"No processes found for user '{username}'."
+
+        # Kill the remaining PIDs
+        for pid in pids:
+            subprocess.run(["kill", "-9", pid], capture_output=True, text=True, check=False)
+
+        return f"Killed {len(pids)} processes for user '{username}'."
     except Exception as e:  # pylint: disable=broad-except
         return f"Error: {e}"
