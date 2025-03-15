@@ -4,6 +4,7 @@ from telegram import Update, LinkPreviewOptions
 from telegram.ext import CallbackContext
 import yaml
 from server_bot.utils import (
+    escape_markdown_v2,
     get_total_cpu_usage,
     get_total_ram_usage,
     get_top_processes,
@@ -113,12 +114,21 @@ async def status(update: Update, _: CallbackContext):
     ram_usage = get_total_ram_usage()
     user_usage = get_user_resource_usage()
 
+    # Escape special characters for MarkdownV2
+    total_cpu_escaped = escape_markdown_v2(f"{total_cpu:.2f}")
+    ram_usage_escaped = escape_markdown_v2(f"{ram_usage:.2f}")
+    user_usage_escaped = escape_markdown_v2(user_usage)
+
     # Send a message with total system information
     status_message = (
-        f"📊 *System Status (Updated):*\n"
-        f"🔥 *Total CPU Usage:* {total_cpu:.2f}%\n"
-        f"🧠 *Total RAM Usage:* {ram_usage:.2f}%\n\n"
-        f"👥 *CPU/RAM Usage per User:*\n```\n{user_usage}\n```\n"
+        r"📊 *System Status \(Updated\):*"
+        "\n"
+        f"🔥 *Total CPU Usage:* {total_cpu_escaped}%"
+        "\n"
+        f"🧠 *Total RAM Usage:* {ram_usage_escaped}%"
+        "\n\n"
+        f"👥 *CPU/RAM Usage per User:*"
+        f"\n```\n{user_usage_escaped}\n```\n"
     )
 
     await update.message.reply_text(status_message, parse_mode="MarkdownV2")
@@ -130,9 +140,11 @@ async def topcpu(update: Update, _: CallbackContext):
 
     top_cpu = get_top_processes(by="cpu", limit=10)  # You can adjust the limit here
 
+    top_cpu_escaped = escape_markdown_v2(top_cpu)
+
     top_cpu_message = (
-        f"🚀 *Top CPU-consuming Processes:*\n"
-        f"```\n{top_cpu}\n```"
+        r"🚀 *Top CPU\-consuming Processes:*\n"
+        f"```\n{top_cpu_escaped}\n```"
     )
 
     await update.message.reply_text(top_cpu_message, parse_mode="MarkdownV2")
@@ -144,9 +156,11 @@ async def topram(update: Update, _: CallbackContext):
 
     top_memory = get_top_processes(by="memory", limit=10)  # You can adjust the limit here
 
+    top_memory_escaped = escape_markdown_v2(top_memory)
+
     top_memory_message = (
-        f"🧠 *Top RAM-consuming Processes:*\n"
-        f"```\n{top_memory}\n```"
+        r"🧠 *Top RAM\-consuming Processes:*\n"
+        f"```\n{top_memory_escaped}\n```"
     )
 
     await update.message.reply_text(top_memory_message, parse_mode="MarkdownV2")
@@ -177,5 +191,5 @@ async def sensors(update: Update, _: CallbackContext):
     sensors_data = get_sensors_data()
     await update.message.reply_text(
         f"📊 *Sensor Data:*\n```\n{sensors_data}\n```",
-        parse_mode="Markdown"
+        parse_mode="MarkdownV2"
     )

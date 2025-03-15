@@ -1,4 +1,4 @@
-# Server Monitoring Bot 🤖
+# Server Monitoring Bot
 
 A Telegram bot for monitoring server resources and managing processes.
 

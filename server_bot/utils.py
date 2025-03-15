@@ -7,6 +7,25 @@ import time
 import psutil
 
 
+def escape_markdown_v2(text: str) -> str:
+    """Escape special characters for MarkdownV2 formatting.
+
+    Parameters:
+        text (str): The input text to escape.
+
+    Returns:
+        str: The escaped text.
+    """
+    # List of characters to escape
+    escape_chars = r"_*[]()~`>#+-=|{}.!"
+
+    # Escape each character
+    for char in escape_chars:
+        text = text.replace(char, f"\\{char}")
+
+    return text
+
+
 def run_command(cmd):
     """Runs a shell command and returns the output."""
     try:
@@ -122,7 +141,7 @@ def get_user_resource_usage():
             f"{user}: CPU {data['cpu']:.2f}%, RAM {data['memory']:.2f}%"
             for user, data in user_stats.items()
         ]
-    ) or "No active processes found."
+    ) or r"No active processes found\."
 
 
 def kill_processes_by_name(process_name, username):
