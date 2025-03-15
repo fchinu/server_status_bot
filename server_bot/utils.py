@@ -187,3 +187,15 @@ def kill_processes_by_user(username):
         return f"Killed {len(pids)} processes for user '{username}'."
     except Exception as e:  # pylint: disable=broad-except
         return f"Error: {e}"
+
+
+def get_sensors_data():
+    """Run the 'sensors' command and return its output."""
+    try:
+        result = subprocess.run(["sensors"], capture_output=True, text=True, check=False)
+        if result.returncode == 0:
+            return result.stdout.strip()
+        else:
+            return "Error: Unable to retrieve sensor data. Ensure 'lm-sensors' is installed."
+    except Exception as e:  # pylint: disable=broad-except
+        return f"Error: {e}"

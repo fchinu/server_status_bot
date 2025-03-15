@@ -9,7 +9,8 @@ from server_bot.utils import (
     get_top_processes,
     get_user_resource_usage,
     kill_processes_by_name,
-    kill_processes_by_user
+    kill_processes_by_user,
+    get_sensors_data
 )
 
 # Load config
@@ -47,18 +48,29 @@ async def start(update: Update, _: CallbackContext):
 async def help_command(update: Update, _: CallbackContext):
     """Send a help message with an overview of the bot's functionality."""
     help_text = (
-        r"🤖 *Ali50 Monitoring Bot*", "\n\n",
-        r"This bot allows you to monitor your server and manage processes\.", "\n\n",
-        r"Here are the available commands:", "\n",
-        r"\- /start: Start the bot and see the welcome message\.", "\n",
-        r"\- /help: Show this help message\.", "\n",
-        r"\- /commands: List all available commands\.", "\n",
-        r"\- /status: Get detailed system status \(CPU, RAM, processes\)\.", "\n",
-        r"\- /topcpu: Show the top CPU\-consuming processes\.", "\n",
-        r"\- /topram: Show the top RAM\-consuming processes\.", "\n",
-        r"\- /killall \<process\_name\>: Kill all processes with the given name\.", "\n",
-        r"\- /killuser: Kill all processes for the configured user\.", "\n\n",
-        r"For more information, visit the ",
+        r"🤖 *Ali50 Monitoring Bot*"
+        "\n\n"
+        r"This bot allows you to monitor your server and manage processes\."
+        "\n\n"
+        r"Here are the available commands:"
+        "\n"
+        r"\- /start: Start the bot and see the welcome message\."
+        "\n"
+        r"\- /help: Show this help message\."
+        "\n"
+        r"\- /commands: List all available commands\."
+        "\n"
+        r"\- /status: Get detailed system status \(CPU, RAM, processes\)\."
+        "\n"
+        r"\- /topcpu: Show the top CPU\-consuming processes\."
+        "\n"
+        r"\- /topram: Show the top RAM\-consuming processes\."
+        "\n"
+        r"\- /killall \<process\_name\>: Kill all processes with the given name\."
+        "\n"
+        r"\- /killuser: Kill all processes for the configured user\."
+        "\n\n"
+        r"For more information, visit the "
         r"[GitHub repository](https://github\.com/fchinu/server\_status\_bot)\."
     )
     await update.message.reply_text(
@@ -71,15 +83,24 @@ async def help_command(update: Update, _: CallbackContext):
 async def commands(update: Update, _: CallbackContext):
     """List all available commands with brief descriptions."""
     commands_text = (
-        r"📜 *Available Commands*", "\n\n",
-        r"\- /start: Start the bot and see the welcome message\.", "\n",
-        r"\- /help: Show the help message\.", "\n",
-        r"\- /commands: List all available commands\.", "\n",
-        r"\- /status: Get detailed system status \(CPU, RAM, processes\)\.", "\n",
-        r"\- /topcpu: Show the top CPU\-consuming processes\.", "\n",
-        r"\- /topram: Show the top RAM\-consuming processes\.", "\n",
-        r"\- /killall \<process\_name\>: Kill all processes with the given name\.", "\n",
-        r"\- /killuser: Kill all processes for the configured user\.", "\n\n"
+        r"📜 *Available Commands*"
+        "\n\n"
+        r"\- /start: Start the bot and see the welcome message\."
+        "\n"
+        r"\- /help: Show the help message\."
+        "\n"
+        r"\- /commands: List all available commands\."
+        "\n"
+        r"\- /status: Get detailed system status \(CPU, RAM, processes\)\."
+        "\n"
+        r"\- /topcpu: Show the top CPU\-consuming processes\."
+        "\n"
+        r"\- /topram: Show the top RAM\-consuming processes\."
+        "\n"
+        r"\- /killall \<process\_name\>: Kill all processes with the given name\."
+        "\n"
+        r"\- /killuser: Kill all processes for the configured user\."
+        "\n\n"
     )
     await update.message.reply_text(commands_text, parse_mode="MarkdownV2")
 
@@ -148,3 +169,9 @@ async def killuser(update: Update, _: CallbackContext):
     """Kill all processes for the configured user."""
     result = kill_processes_by_user(USERNAME)
     await update.message.reply_text(result)
+
+@restricted
+async def sensors(update: Update, context: CallbackContext):
+    """Send sensor data (e.g., temperatures, fan speeds)."""
+    sensors_data = get_sensors_data()
+    await update.message.reply_text(f"📊 *Sensor Data:*\n```\n{sensors_data}\n```", parse_mode="Markdown")

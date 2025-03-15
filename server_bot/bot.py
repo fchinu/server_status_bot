@@ -9,7 +9,8 @@ from server_bot.commands import (
     topcpu,
     topram,
     help_command,
-    commands
+    commands,
+    sensors
 )
 
 # Load config
@@ -48,6 +49,7 @@ def main():
     app.add_handler(CommandHandler("topram", topram))
     app.add_handler(CommandHandler("killall", killall))
     app.add_handler(CommandHandler("killuser", killuser))
+    app.add_handler(CommandHandler("sensors", sensors))
 
     app.run_polling()
 
