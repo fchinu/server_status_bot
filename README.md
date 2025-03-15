@@ -1,4 +1,4 @@
-# Ali50 Monitoring Bot 🤖
+# Server Monitoring Bot 🤖
 
 A Telegram bot for monitoring server resources and managing processes.
 
@@ -16,9 +16,6 @@ A Telegram bot for monitoring server resources and managing processes.
 
 - **Process Management**:
   - Kill processes by name or user.
-
-- **Security**:
-  - Restricted access to authorized users.
 
 ---
 
