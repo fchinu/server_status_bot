@@ -3,7 +3,7 @@
 A Telegram bot for monitoring server resources and managing processes.
 
 ![Python Version](https://img.shields.io/badge/python-3.12-blue)
-![CI Tests](https://github.com/fchinu/server_status_bot/actions/workflows/ci.yml/badge.svg)
+![CI Tests](https://github.com/fchinu/server_status_bot/actions/workflows/config_test.yml/badge.svg)
 
 ---
 
